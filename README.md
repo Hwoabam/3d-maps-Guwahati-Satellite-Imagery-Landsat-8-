@@ -143,6 +143,6 @@ system("ffmpeg -framerate 60 -i guwahati_sentinel%d.png -vcodec libx264 -an Ghy_
 For imprinting a text Watermark on the video, the following code is run in command prompt:  
 ```{r eval=FALSE, include=FALSE}
 ffmpeg -i Ghy_Sentinel_2.mp4 -vf drawtext="text='Hydrosense Lab IIT Delhi': fontcolor=black:fontsize=24: x=20: y=(h-50)" -codec:a copy output.mp4
-}
+```
 
 
