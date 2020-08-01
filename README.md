@@ -1,5 +1,6 @@
 # 3d-maps-Guwahati-Satellite-Imagery-Sentinel-2
 A brief tutorial on generation of 3D map using SRTM and Landsat 8 Imagery
+![Demo1](https://github.com/Hwoabam/3d-maps-Guwahati-Satellite-Imagery-Sentinel-2/blob/master/Media/Animation/sentinel2.gif)
 
 The following packages are installed and loaded from the library:
 ```{r}
@@ -27,17 +28,18 @@ projectRaster(satellite_images,
 #plot sentinel-2 image
 plotRGB(satellite_images)
 ```
-
+![Truecolor](https://github.com/Hwoabam/3d-maps-Guwahati-Satellite-Imagery-Sentinel-2/blob/master/Media/Plots/plotRgb.png)
 
 Gamma correction of the Image. using square root of the stack.
 ```{r}
 guwahati_rgb_corrected = sqrt(stack(guwahati_r, guwahati_g, guwahati_b))
 plotRGB(guwahati_rgb_corrected)
 ```
+![Gamma correction](https://github.com/Hwoabam/3d-maps-Guwahati-Satellite-Imagery-Sentinel-2/blob/master/Media/Plots/gammapro.png) 
 
 The GIS data for elevation is downloaded from Derek Watkin's -"30 meter SRTM tile downloader". The downloaded SRTM hgt data is converted to a matrix. The result of the plot is an elevation intensity profile of the tile. In this purpose the default crs is used, which is WGS844 longitude latitude. We can plot the file using height_shade(raster_to_matrix) function
 ```{r echo=TRUE}
-#Download DEM using elevatr
+#Download DEM using elevatr or extract from SRTM tile downloader
 Elevation_File <- raster("D:/Assam maps/New Folder/N26E091.hgt")
 Elevation_File
 #reproject the DEM
@@ -47,18 +49,15 @@ projectRaster(Elevation_File,
 height_shade(raster_to_matrix(Elevation_File)) %>%
   plot_map()
 ```
-
+![Elevation Heatmap](https://github.com/Hwoabam/3d-maps-Guwahati-Satellite-Imagery-Sentinel-2/blob/master/Media/Plots/Elevation_heatmap.png) 
 
 Transforming data from Long/lat to UTM using 'bilinear' method of interpolation. since here elevation is a continuous variable
 ```{r}
 crs(guwahati_r)
 guwahati_elevation_utm = projectRaster(Elevation_File, crs = crs(guwahati_r), method = "bilinear")
 crs(guwahati_elevation_utm)
-
 ```
-
 Defining the area required to be cropped off from the area available in the data sets. The coordinates of the bottom left corner and the top right corner of the desired plot is entered. Defining an object 'scl' which gives a measure of the scalebar with 20km length, with reference to the map.
-
 ```{r echo=TRUE}
 bot_lefty=91.529469
 bot_leftx=26.065919
@@ -73,7 +72,6 @@ e = extent(extent_latlong)
 e
 scl
 ```
-
 Defining a function to check the location of the area covered with reference to a map using theleaflet package. 
 ```{r}
 #AoI Function
@@ -92,33 +90,33 @@ leaflet(mask) %>%
   addTiles() %>% 
   addPolygons()
 ```
+![Elevation Heatmap](https://github.com/Hwoabam/3d-maps-Guwahati-Satellite-Imagery-Sentinel-2/blob/master/Media/Plots/Elevation_heatmap.png) 
 
 The crop function is used for cropping the required area for the elevation and Satellite Imagery matrices.Now the Cropped area is to be transformed into a 3 layered RGB array and the elevations need to be transposed on the array. The aperm() function is used for this purpose.Then, the elevation data is converted into Base R matrix
 ```{r fig1, fig.height = 12, fig.width = 8, align= "center"}
 guwahati_rgb_cropped = crop(guwahati_rgb_corrected, e)
 elevation_cropped = crop(guwahati_elevation_utm, e)
 names(guwahati_rgb_cropped) = c("r","g","b")
-
 guwahati_r_cropped = raster_to_matrix(guwahati_rgb_cropped$r)
 guwahati_g_cropped = raster_to_matrix(guwahati_rgb_cropped$g)
 guwahati_b_cropped = raster_to_matrix(guwahati_rgb_cropped$b)
-
 guwahatiel_matrix = raster_to_matrix(elevation_cropped)
-
 guwahati_rgb_array = array(0,dim=c(nrow(guwahati_r_cropped),ncol(guwahati_r_cropped),3))
-
 guwahati_rgb_array[,,1] = guwahati_r_cropped/255 #Red layer
 guwahati_rgb_array[,,2] = guwahati_g_cropped/255 #Blue layer
 guwahati_rgb_array[,,3] = guwahati_b_cropped/255 #Green layer
-
 guwahati_rgb_array = aperm(guwahati_rgb_array, c(2,1,3))
 plot_map(guwahati_rgb_array)
 ```
+![Cropped Matrix](https://github.com/Hwoabam/3d-maps-Guwahati-Satellite-Imagery-Sentinel-2/blob/master/Media/Plots/Sent2_cropped.png) 
+
 The contrast is then adjusted
 ```{r fig2, fig.height = 12, fig.width = 8, align= "center"}
 guwahati_rgb_contrast = rescale(guwahati_rgb_array,to=c(0,1))
 plot_map(guwahati_rgb_contrast)
 ```
+![Cropped Matrix](https://github.com/Hwoabam/3d-maps-Guwahati-Satellite-Imagery-Sentinel-2/blob/master/Media/Plots/Sent2_contrast_corrected.png)
+
 Then a 3D plot is generated in the Rgl window, with compass and scalebar renderings. 
 ```{r}
 plot_3d(guwahati_rgb_contrast, guwahatiel_matrix, windowsize = c(1200,900), zscale = 7.5, shadowdepth = -150,
@@ -127,6 +125,8 @@ render_compass(position = "W" )
 render_scalebar(limits=c(0,10,20),label_unit = "km",position = "S", y=50,scale_length = c(scl,1))
 render_snapshot(title_text = "Guwahati city | Imagery: Sentinel-2 | DEM: 30m SRTM", title_bar_color = "#1f5214", title_color = "white", title_bar_alpha = 1)
 ```
+![3D plot](https://github.com/Hwoabam/3d-maps-Guwahati-Satellite-Imagery-Sentinel-2/blob/master/Media/Snapshots/snap1.png)
+
 A 24 second video is generated of the animation of the rotation of the plot using ffmpeg function at framerate of 60fps. 
 ```{r eval=FALSE, include=FALSE}
 angles= seq(0,360,length.out = 1441)[-1]
@@ -140,9 +140,6 @@ for(i in 1:1440) {
 rgl::rgl.close()
 system("ffmpeg -framerate 60 -i guwahati_sentinel%d.png -vcodec libx264 -an Ghy_Sentinel_2.1.mp4 ")
 ```
-
-![Guwahati_Sentinel-2](C:/Users/asus/Documents/Ghy_Sentinel_2.1.mp4)
-
 For imprinting a text Watermark on the video, this code is run n command prompt:  
 
 ffmpeg -i Ghy_Sentinel_2.mp4 -vf drawtext="text='Hydrosense Lab IIT Delhi': fontcolor=black:fontsize=24: x=20: y=(h-50)" -codec:a copy output.mp4
