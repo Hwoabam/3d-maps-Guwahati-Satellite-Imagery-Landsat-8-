@@ -1,4 +1,4 @@
-# 3d-maps-Guwahati-Satellite-Imagery-Sentinel-2-
+# 3d-maps-Guwahati-Satellite-Imagery-Sentinel-2
 
 The following packages are installed and loaded from the library:
 ```{r}
