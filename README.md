@@ -90,7 +90,7 @@ leaflet(mask) %>%
   addTiles() %>% 
   addPolygons()
 ```
-![Elevation Heatmap](https://github.com/Hwoabam/3d-maps-Guwahati-Satellite-Imagery-Sentinel-2/blob/master/Media/Plots/Elevation_heatmap.png) 
+![Leaflet](https://github.com/Hwoabam/3d-maps-Guwahati-Satellite-Imagery-Sentinel-2/blob/master/Media/Plots/Capture23.png) 
 
 The crop function is used for cropping the required area for the elevation and Satellite Imagery matrices.Now the Cropped area is to be transformed into a 3 layered RGB array and the elevations need to be transposed on the array. The aperm() function is used for this purpose.Then, the elevation data is converted into Base R matrix
 ```{r fig1, fig.height = 12, fig.width = 8, align= "center"}
