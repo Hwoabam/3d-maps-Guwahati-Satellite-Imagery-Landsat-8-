@@ -1,4 +1,5 @@
 # 3d-maps-Guwahati-Satellite-Imagery-Sentinel-2
+A brief tutorial on generation of 3D map using SRTM and Landsat 8 Imagery
 
 The following packages are installed and loaded from the library:
 ```{r}
@@ -148,4 +149,3 @@ ffmpeg -i Ghy_Sentinel_2.mp4 -vf drawtext="text='Hydrosense Lab IIT Delhi': font
 
 
 
-A brief tutorial on generation of 3D map using SRTM and Landsat 8 Imagery
