@@ -140,9 +140,9 @@ for(i in 1:1440) {
 rgl::rgl.close()
 system("ffmpeg -framerate 60 -i guwahati_sentinel%d.png -vcodec libx264 -an Ghy_Sentinel_2.1.mp4 ")
 ```
-For imprinting a text Watermark on the video, this code is run n command prompt:  
-
+For imprinting a text Watermark on the video, the following code is run in command prompt:  
+```{r eval=FALSE, include=FALSE}
 ffmpeg -i Ghy_Sentinel_2.mp4 -vf drawtext="text='Hydrosense Lab IIT Delhi': fontcolor=black:fontsize=24: x=20: y=(h-50)" -codec:a copy output.mp4
-
+}
 
 
