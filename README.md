@@ -17,9 +17,9 @@ library(rgeos)
 
 The images may be downloaded From Sentinel Hub: EO Browser, Using L2A datasets which are atmospherically corrected. Optimum results are seen when the cloud coverage of the area is 0% and so the data needs to be downloaded accordingly. The raster images are called using raster::raster. Brick is used while using multiband image(raster::brick). Later we can plot it using plotRGB function. 
 ```{r echo=TRUE}
-guwahati_r = raster("D:/Assam maps/EO_Browser_images/2019-01-12_00-00_-_2019-01-12_23-59_Sentinel-2_S2L2A_B04_(Raw).TIFF")
-guwahati_g = raster("D:/Assam maps/EO_Browser_images/2019-01-12_00-00_-_2019-01-12_23-59_Sentinel-2_S2L2A_B03_(Raw).TIFF")
-guwahati_b = raster("D:/Assam maps/EO_Browser_images/2019-01-12_00-00_-_2019-01-12_23-59_Sentinel-2_S2L2A_B02_(Raw).TIFF")
+guwahati_r = raster(File location"/2019-01-12_00-00_-_2019-01-12_23-59_Sentinel-2_S2L2A_B04_(Raw).TIFF")
+guwahati_g = raster(File location"/2019-01-12_00-00_-_2019-01-12_23-59_Sentinel-2_S2L2A_B03_(Raw).TIFF")
+guwahati_b = raster(File location"/2019-01-12_00-00_-_2019-01-12_23-59_Sentinel-2_S2L2A_B02_(Raw).TIFF")
  satellite_images = stack(guwahati_r, guwahati_g, guwahati_b)
 
 plotRGB(satellite_images)
@@ -40,7 +40,7 @@ plotRGB(guwahati_rgb_corrected)
 The GIS data for elevation is downloaded from Derek Watkin's -"30 meter SRTM tile downloader". The downloaded SRTM hgt data is converted to a matrix. The result of the plot is an elevation intensity profile of the tile. In this purpose the default crs is used, which is WGS844 longitude latitude. We can plot the file using height_shade(raster_to_matrix) function
 ```{r echo=TRUE}
 #Download DEM using elevatr or extract from SRTM tile downloader
-Elevation_File <- raster("D:/Assam maps/New Folder/N26E091.hgt")
+Elevation_File <- raster(File location"/N26E091.hgt")
 Elevation_File
 #reproject the DEM
 projectRaster(Elevation_File, 
